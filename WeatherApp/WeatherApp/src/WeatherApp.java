@@ -1,34 +1,32 @@
-import javax.swing.*; // Importuje pakiet zawierający klasy do tworzenia interfejsu graficznego użytkownika (GUI) w Swing
-import javax.swing.border.Border; // Importuje klasę Border z pakietu javax.swing.border do tworzenia obramowania komponentów
-import java.awt.*; // Importuje pakiet zawierający klasy i interfejsy dla tworzenia i zarządzania GUI w AWT
-import java.awt.event.ActionEvent; // Importuje klasę ActionEvent z pakietu java.awt.event do obsługi zdarzeń akcji
-import java.awt.event.ActionListener; // Importuje interfejs ActionListener z pakietu java.awt.event do obsługi słuchaczy zdarzeń
-import java.time.LocalDate; // Importuje klasę LocalDate z pakietu java.time do obsługi daty
-import java.time.format.DateTimeFormatter; // Importuje klasę DateTimeFormatter z pakietu java.time.format do formatowania daty
-import java.util.Locale; // Importuje klasę Locale z pakietu java.util do obsługi lokalizacji
+import javax.swing.*;
+import javax.swing.border.Border;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
-
-// Klasa implementująca interfejs Border do tworzenia obramowania z zaokrąglonymi rogami
 class RoundBorder implements Border {
-    private int radius; // Promień obramowania
+    private int radius;
 
     RoundBorder(int radius) {
-        this.radius = radius; // Inicjalizacja promienia obramowania
+        this.radius = radius;
     }
 
     @Override
     public Insets getBorderInsets(Component c) {
-        return new Insets(this.radius, this.radius, this.radius, this.radius); // Zwraca marginesy obramowania
+        return new Insets(this.radius, this.radius, this.radius, this.radius);
     }
 
     @Override
     public boolean isBorderOpaque() {
-        return true; // Obramowanie jest pełne, nieprzezroczyste
+        return true;
     }
 
     @Override
     public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
-        g.drawRoundRect(x, y, width-1, height-1, radius, radius); // Rysuje obramowanie z zaokrąglonymi rogami
+        g.drawRoundRect(x, y, width-1, height-1, radius, radius);
     }
 }
 
@@ -41,139 +39,134 @@ public class WeatherApp {
     private JFrame frame;
 
     public WeatherApp() {
-        frame = new JFrame("Weather v1.0"); // Tworzy nowe okno JFrame z tytułem "Weather v1.0"
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Ustawia operację zamknięcia aplikacji po zamknięciu okna
-        frame.setLayout(new BorderLayout()); // Ustawia menedżer rozkładu BorderLayout dla okna
+        frame = new JFrame("Weather v1.0");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new BorderLayout());
 
-        JPanel backgroundPanel = new JPanel() { // Tworzy nowy panel JPanel, dziedziczący po JPanel, który będzie tłem aplikacji
+        JPanel backgroundPanel = new JPanel() {
             @Override
-            protected void paintComponent(Graphics g) { // Przesłania metodę paintComponent, aby narysować tło panelu
+            protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                Image backgroundImage = getBackgroundImage(answer.getText()); // Pobiera obraz tła na podstawie opisu pogody w polu tekstowym
-                g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this); // Rysuje obraz tła na panelu
+                Image backgroundImage = getBackgroundImage(answer.getText());
+                g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
             }
         };
-        backgroundPanel.setLayout(new BorderLayout()); // Ustawia menedżer rozkładu BorderLayout dla tła panelu
+        backgroundPanel.setLayout(new BorderLayout());
 
-        JPanel appPanel = new JPanel(); // Tworzy nowy panel JPanel, który będzie zawierał elementy interfejsu aplikacji
-        appPanel.setOpaque(false); // Ustawia przezroczystość panelu
-        appPanel.setLayout(new BorderLayout()); // Ustawia menedżer rozkładu BorderLayout dla panelu aplikacji
+        JPanel appPanel = new JPanel();
+        appPanel.setOpaque(false);
+        appPanel.setLayout(new BorderLayout());
 
-        JPanel topPanel = new JPanel(); // Tworzy nowy panel JPanel, który będzie zawierał elementy górnej części aplikacji
-        topPanel.setOpaque(false); // Ustawia przezroczystość panelu
-        topPanel.setLayout(new FlowLayout()); // Ustawia menedżer rozkładu FlowLayout dla górnego panelu
+        JPanel topPanel = new JPanel();
+        topPanel.setOpaque(false);
+        topPanel.setLayout(new FlowLayout());
 
-        JLabel locationLabel = new JLabel("Lokalizacja:"); // Tworzy etykietę "Lokalizacja"
-        locationField = new JTextField(10); // Tworzy pole tekstowe o szerokości 10 znaków
-        locationField.setBorder(new RoundBorder(10)); // Ustawia obramowanie pola tekstowego z zaokrąglonymi rogami
+        JLabel locationLabel = new JLabel("Lokalizacja:");
+        locationField = new JTextField(10);
+        locationField.setBorder(new RoundBorder(10));
 
-        topPanel.add(locationLabel); // Dodaje etykietę do górnego panelu
-        topPanel.add(locationField); // Dodaje pole tekstowe do górnego panelu
+        topPanel.add(locationLabel);
+        topPanel.add(locationField);
 
-        appPanel.add(topPanel, BorderLayout.NORTH); // Dodaje górny panel do panelu aplikacji w obszarze północnym
+        appPanel.add(topPanel, BorderLayout.NORTH);
 
-        JPanel buttonPanel = new JPanel(); // Tworzy nowy panel JPanel, który będzie zawierał przyciski i listę rozwijaną
-        buttonPanel.setOpaque(false); // Ustawia przezroczystość panelu
-        buttonPanel.setLayout(new FlowLayout()); // Ustawia menedżer rozkładu FlowLayout dla panelu przycisków
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setOpaque(false);
+        buttonPanel.setLayout(new FlowLayout());
 
-        celsiusButton = new JButton("Skala Celsjusza  (jednostka °C)"); // Tworzy przycisk "Skala Celsjusza"
-        fahrenheitButton = new JButton("Skala Fahrenheita (jednostka °F)"); // Tworzy przycisk "Skala Fahrenheita"
-        weatherDate = new JComboBox<>(); // Tworzy listę rozwijaną dla daty
+        celsiusButton = new JButton("Skala Celsjusza  (jednostka °C)");
+        fahrenheitButton = new JButton("Skala Fahrenheita (jednostka °F)");
+        weatherDate = new JComboBox<>();
 
-        celsiusButton.setBackground(Color.WHITE); // Ustawia kolor tła przycisku na biały
-        fahrenheitButton.setBackground(Color.WHITE); // Ustawia kolor tła przycisku na biały
-        weatherDate.setBackground(Color.WHITE); // Ustawia kolor tła listy rozwijanej na biały
+        celsiusButton.setBackground(Color.WHITE);
+        fahrenheitButton.setBackground(Color.WHITE);
+        weatherDate.setBackground(Color.WHITE);
 
-        celsiusButton.setBorder(new RoundBorder(10)); // Ustawia obramowanie przycisku z zaokrąglonymi rogami
-        fahrenheitButton.setBorder(new RoundBorder(10)); // Ustawia obramowanie przycisku z zaokrąglonymi rogami
-        weatherDate.setBorder(new RoundBorder(7)); // Ustawia obramowanie listy rozwijanej z zaokrąglonymi rogami
+        celsiusButton.setBorder(new RoundBorder(10));
+        fahrenheitButton.setBorder(new RoundBorder(10));
+        weatherDate.setBorder(new RoundBorder(7));
 
-        buttonPanel.add(celsiusButton); // Dodaje przycisk "Skala Celsjusza" do panelu przycisków
-        buttonPanel.add(fahrenheitButton); // Dodaje przycisk "Skala Fahrenheita" do panelu przycisków
-        buttonPanel.add(new JLabel("Data:")); // Dodaje etykietę "Data" do panelu przycisków
-        buttonPanel.add(weatherDate); // Dodaje listę rozwijaną dla daty do panelu przycisków
+        buttonPanel.add(celsiusButton);
+        buttonPanel.add(fahrenheitButton);
+        buttonPanel.add(new JLabel("Data:"));
+        buttonPanel.add(weatherDate);
 
-        appPanel.add(buttonPanel, BorderLayout.CENTER); // Dodaje panel przycisków do panelu aplikacji w obszarze centralnym
+        appPanel.add(buttonPanel, BorderLayout.CENTER);
 
-        JPanel textPanel = new JPanel(); // Tworzy nowy panel JPanel, który będzie zawierał pole tekstowe z odpowiedzią
-        textPanel.setOpaque(false); // Ustawia przezroczystość panelu
-        textPanel.setLayout(new GridBagLayout()); // Ustawia menedżer rozkładu GridBagLayout dla panelu tekstu
+        JPanel textPanel = new JPanel();
+        textPanel.setOpaque(false);
+        textPanel.setLayout(new GridBagLayout());
 
-        answer = new JTextArea(12, 30); // Tworzy pole tekstowe o rozmiarze 12 wierszy na 30 kolumn
-        answer.setText("Podaj lokalizację oraz wybierz jednostkę i datę."); // Ustawia domyślny tekst w polu tekstowym
-        answer.setLineWrap(true); // Ustawia zawijanie wierszy
-        answer.setWrapStyleWord(true); // Ustawia zawijanie słów
-        answer.setEditable(false); // Ustawia pole tekstowe jako nieedytowalne
-        answer.setFocusable(false); // Ustawia pole tekstowe jako niemające focusu
-        answer.setFont(new Font("Arial", Font.BOLD, 18)); // Ustawia czcionkę i rozmiar tekstu
-        answer.setMargin(new Insets(10, 120, 10, 10)); // Ustawia marginesy wewnątrz pola tekstowego
-        answer.setOpaque(false); // Ustawia przezroczystość pola tekstowego
-        answer.setBackground(new Color(0, 0, 0, 0)); // Ustawia przezroczyste tło pola tekstowego
+        answer = new JTextArea(12, 30);
+        answer.setText("Podaj lokalizację oraz wybierz jednostkę i datę.");
+        answer.setLineWrap(true);
+        answer.setWrapStyleWord(true);
+        answer.setEditable(false);
+        answer.setFocusable(false);
+        answer.setFont(new Font("Arial", Font.BOLD, 18));
+        answer.setMargin(new Insets(10, 120, 10, 10));
+        answer.setOpaque(false);
+        answer.setBackground(new Color(0, 0, 0, 0));
 
-        JScrollPane scrollPane = new JScrollPane(answer); // Tworzy panel przewijania dla pola tekstowego
-        scrollPane.setOpaque(false); // Ustawia przezroczystość panelu przewijania
-        scrollPane.getViewport().setOpaque(false); // Ustawia przezroczystość obszaru przewijanego
-        scrollPane.setBorder(BorderFactory.createEmptyBorder()); // Ustawia pusty obramowanie dla panelu przewijania
+        JScrollPane scrollPane = new JScrollPane(answer);
+        scrollPane.setOpaque(false);
+        scrollPane.getViewport().setOpaque(false);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
 
-        textPanel.add(scrollPane); // Dodaje panel przewijania do panelu tekstu
+        textPanel.add(scrollPane);
 
-        appPanel.add(textPanel, BorderLayout.SOUTH); // Dodaje panel tekstu do panelu aplikacji w obszarze południowym
+        appPanel.add(textPanel, BorderLayout.SOUTH);
 
-        backgroundPanel.add(appPanel, BorderLayout.CENTER); // Dodaje panel aplikacji do tła panelu
+        backgroundPanel.add(appPanel, BorderLayout.CENTER);
 
-        frame.setContentPane(backgroundPanel); // Ustawia tło panelu jako zawartość okna
-        frame.setSize(700, 500); // Ustawia rozmiar okna
-        frame.setResizable(false); // Blokuje zmianę rozmiaru okna
-        frame.setLocationRelativeTo(null); // Ustawia położenie okna na środku ekranu
-        frame.setVisible(true); // Ustawia widoczność okna na true
+        frame.setContentPane(backgroundPanel);
+        frame.setSize(700, 500);
+        frame.setResizable(false);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
 
         celsiusButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Kod obsługi zdarzenia po kliknięciu przycisku "Skala Celsjusza"
-                String location = locationField.getText(); // Pobranie tekstu z pola lokalizacji
-                String selectedDate = (String) weatherDate.getSelectedItem(); // Pobranie wybranej daty z pola wyboru daty
-                GetWeatherData weatherData = new GetWeatherData(); // Tworzenie obiektu do pobierania danych pogodowych
-                String weatherInfo = weatherData.getWeatherData(location, selectedDate, "metric"); // Pobranie informacji o pogodzie dla danej lokalizacji i daty w skali Celsjusza
-                answer.setText(weatherInfo); // Ustawienie pobranych informacji o pogodzie w odpowiednim komponencie (np. etykiecie, polu tekstowym)
-                frame.repaint(); // Odświeżenie tła po zmianie opisu pogody
+                String location = locationField.getText();
+                String selectedDate = (String) weatherDate.getSelectedItem();
+                GetWeatherData weatherData = new GetWeatherData();
+                String weatherInfo = weatherData.getWeatherData(location, selectedDate, "metric");
+                answer.setText(weatherInfo);
+                frame.repaint();
             }
         });
 
         fahrenheitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Kod obsługi zdarzenia po kliknięciu przycisku "Skala Fahrenheita"
-                String location = locationField.getText(); // Pobranie tekstu z pola lokalizacji
-                String selectedDate = (String) weatherDate.getSelectedItem(); // Pobranie wybranej daty z pola wyboru daty
-                GetWeatherData weatherData = new GetWeatherData(); // Tworzenie obiektu do pobierania danych pogodowych
-                String weatherInfo = weatherData.getWeatherData(location, selectedDate, "imperial"); // Pobranie informacji o pogodzie dla danej lokalizacji i daty w skali Fahrenheita
-                answer.setText(weatherInfo); // Ustawienie pobranych informacji o pogodzie w odpowiednim komponencie (np. etykiecie, polu tekstowym)
-                frame.repaint(); // Odświeżenie tła po zmianie opisu pogody
+                String location = locationField.getText();
+                String selectedDate = (String) weatherDate.getSelectedItem();
+                GetWeatherData weatherData = new GetWeatherData();
+                String weatherInfo = weatherData.getWeatherData(location, selectedDate, "imperial");
+                answer.setText(weatherInfo);
+                frame.repaint();
             }
         });
 
-
-        String[] dates = getFutureDates(7); // Tworzenie tablicy zawierającej przyszłe daty dla 7 dni
-        weatherDate.setModel(new DefaultComboBoxModel<>(dates)); // Ustawienie modelu pola wyboru `weatherDate` na podstawie utworzonej tablicy dat
-
+        String[] dates = getFutureDates(7);
+        weatherDate.setModel(new DefaultComboBoxModel<>(dates));
     }
-    private String[] getFutureDates(int numberOfDays) {
-        String[] dates = new String[numberOfDays]; // Tworzenie tablicy na przechowywanie dat
-        LocalDate currentDate = LocalDate.now(); // Pobranie bieżącej daty
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH); // Utworzenie formatera daty
 
-        for (int i = 0; i < numberOfDays; i++) { // Pętla iterująca przez wszystkie dni
-            LocalDate date = currentDate.plusDays(i); // Obliczenie kolejnej daty
-            dates[i] = date.format(formatter); // Przetworzenie daty na format tekstowy i zapisanie jej w tablicy
+    private String[] getFutureDates(int numberOfDays) {
+        String[] dates = new String[numberOfDays];
+        LocalDate currentDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH);
+
+        for (int i = 0; i < numberOfDays; i++) {
+            LocalDate date = currentDate.plusDays(i);
+            dates[i] = date.format(formatter);
         }
 
-        return dates; // Zwrócenie tablicy zawierającej przyszłe daty
+        return dates;
     }
 
-
     private Image getBackgroundImage(String weatherDescription) {
-        // Wybieranie odpowiedniego obrazu tła w zależności od opisu pogody
         if (weatherDescription.contains("Deszcz")) {
             return new ImageIcon("D:\\ABNS\\PPO\\PROJEKT\\WeatherApp\\WeatherApp\\resources\\rain.png").getImage();
         } else if (weatherDescription.contains("Słońce")) {
@@ -189,12 +182,11 @@ public class WeatherApp {
         }
     }
 
-
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                WeatherApp app = new WeatherApp(); // Tworzy nową instancję klasy WeatherApp
+                WeatherApp app = new WeatherApp();
             }
         });
     }
